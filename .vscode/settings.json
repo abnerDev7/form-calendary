@@ -1,0 +1,46 @@
+{
+    "files.autoSave": "onFocusChange",
+    "editor.multiCursorModifier": "ctrlCmd",
+    "editor.wordWrap": "on",
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "terminal.integrated.tabs.enabled": true,
+    "liveServer.settings.AdvanceCustomBrowserCmdLine": "",
+    "liveServer.settings.CustomBrowser": "chrome",
+    "terminal.integrated.defaultProfile.windows": "PowerShell",
+    "editor.tabSize": 2,
+    "workbench.editor.autoLockGroups": {},
+    "explorer.confirmDragAndDrop": false,
+    "liveServer.settings.donotShowInfoMsg": true,
+    "javascript.updateImportsOnFileMove.enabled": "always",
+    "liveServer.settings.donotVerifyTags": true,
+    "diffEditor.ignoreTrimWhitespace": false,
+    "tabnine.experimentalAutoImports": true,
+    "emmet.syntaxProfiles": {
+      "javascript": "jsx"
+    },
+    "emmet.includeLanguages": {
+      "javascript": "html"
+    },
+    "security.workspace.trust.untrustedFiles": "open",
+    "debug.onTaskErrors": "debugAnyway",
+    "[python]": {
+      "editor.formatOnType": true,
+      "editor.formatOnSave": true,
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "eslint.run": "onSave",
+    "explorer.confirmDelete": false,
+    "prettier.singleQuote": true,
+    "workbench.colorTheme": "One Monokai",
+    "workbench.iconTheme": "material-icon-theme",
+    "typescript.updateImportsOnFileMove.enabled": "always",
+    "workbench.editor.customLabels.patterns": {
+      "**/app/**/page.js": "Page: ${dirname}"
+    },
+    "editor.tokenColorCustomizations": {
+      "comments": {
+        "fontStyle": "italic"
+      }
+    }
+  }
