@@ -127,16 +127,36 @@ function CalendaryEvents() {
   const [selectedValue, setSelectedValue] = useState('a');
   const [currentEventApi, setCurrentEventApi] = useState(null);
 
+  const getDatesStartAndEnd = (currEv) => {
+    const datesArr = currEv.eventAt.split('*');
+
+    return datesArr;
+  };
+
   useEffect(() => {
     const getEventsApi = async () => {
       const events = await getEvents();
-      const formattedEvents = events.map((event) => ({
-        id: event.id,
-        title: event.title,
-        start: new Date(event.eventAt),
-        end: new Date(event.eventAt),
-        color: event.color,
-      }));
+
+      const formattedEvents = events.map((event) => {
+        const dates = event.eventAt.split('*');
+
+        if (dates.length === 2) {
+          return {
+            id: event.id,
+            title: event.title,
+            start: new Date(dates[0]),
+            end: new Date(dates[1]),
+            color: event.color,
+          };
+        } else
+          return {
+            id: event.id,
+            title: event.title,
+            start: new Date(event.eventAt),
+            end: new Date(event.eventAt),
+            color: event.color,
+          };
+      });
 
       setEvents(formattedEvents);
     };
@@ -155,10 +175,13 @@ function CalendaryEvents() {
       const description = descriptionEvent;
       const { start, end } = eventCurrent;
 
+      console.log(start, end);
+
       if (!title || !start) return;
 
       const newEvent = {
-        eventAt: start,
+        // eventAt: start,
+        eventAt: `${start}*${end}`,
         title,
         description,
         color: colorsEvents[selectedValue],
@@ -288,9 +311,18 @@ function CalendaryEvents() {
               />
               <p>
                 <strong>Event Date:</strong>{' '}
-                {moment(currentEventApi?.eventAt).format(
+                {getDatesStartAndEnd(currentEventApi).length === 2
+                  ? `${moment(getDatesStartAndEnd(currentEventApi)[0]).format(
+                      'MMMM Do YYYY, h:mm:ss a'
+                    )} - ${moment(
+                      getDatesStartAndEnd(currentEventApi)[1]
+                    ).format('MMMM Do YYYY, h:mm:ss a')}`
+                  : moment(currentEventApi?.eventAt).format(
+                      'MMMM Do YYYY, h:mm:ss a'
+                    )}
+                {/* {moment(currentEventApi?.eventAt).format(
                   'MMMM Do YYYY, h:mm:ss a'
-                )}
+                )} */}
               </p>
               {/* You can add more event details here */}
             </>
