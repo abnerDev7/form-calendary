@@ -13,6 +13,10 @@ import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { momentLocalizer } from 'react-big-calendar';
 import { Calendar } from 'react-big-calendar';
+import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
+
+const DnDCalendar = withDragAndDrop(Calendar);
+
 import styled from 'styled-components';
 
 const localizer = momentLocalizer(moment);
@@ -42,7 +46,7 @@ const NewEvent = styled.div`
   padding: 1rem;
 `;
 
-const CalendarStyled = styled(Calendar)`
+const CalendarStyled = styled(DnDCalendar)`
   background-color: #f8f9fa;
   font-size: 'Roboto';
 
@@ -129,7 +133,6 @@ function CalendaryEvents() {
 
   const getDatesStartAndEnd = (currEv) => {
     const datesArr = currEv.eventAt.split('*');
-
     return datesArr;
   };
 
@@ -175,12 +178,9 @@ function CalendaryEvents() {
       const description = descriptionEvent;
       const { start, end } = eventCurrent;
 
-      console.log(start, end);
-
       if (!title || !start) return;
 
       const newEvent = {
-        // eventAt: start,
         eventAt: `${start}*${end}`,
         title,
         description,
@@ -267,6 +267,24 @@ function CalendaryEvents() {
     inputProps: { 'aria-label': item },
   });
 
+  const onEventDrop = async ({ event, start, end }) => {
+    const updatedEvent = { ...event, eventAt: `${start}*${end}` };
+
+    await updateEvent(event.id, updatedEvent);
+    setNewProperty((property) => !property);
+  };
+
+  const onEventResize = async ({ event, start, end }) => {
+    try {
+      const updatedEvent = { ...event, eventAt: `${start}*${end}` };
+      setNewProperty((property) => !property);
+
+      await updateEvent(event.id, updatedEvent);
+    } catch (error) {
+      console.log('Error updating event:', error);
+    }
+  };
+
   return (
     <div>
       <CalendarStyled
@@ -278,8 +296,15 @@ function CalendaryEvents() {
         onSelectSlot={handleSelectSlot}
         onSelectEvent={handleGetEvent}
         eventPropGetter={eventStyleGetter}
+        resizableAccessor={() => true}
+        draggableAccessor={() => true}
+        onEventDrop={onEventDrop}
+        onEventResize={onEventResize}
         selectable
+        popup
+        resizables
       />
+      {/* Modal */}
       <ModalWindow
         open={open}
         handleClose={() => {
@@ -302,7 +327,6 @@ function CalendaryEvents() {
                 onChange={(e) => setNameEvent(e.target.value)} // Update the title when typed
               />
               {/* Editable Input for Event Description */}
-
               <strong>Description</strong>
               <Input
                 value={descriptionEvent}
@@ -320,11 +344,7 @@ function CalendaryEvents() {
                   : moment(currentEventApi?.eventAt).format(
                       'MMMM Do YYYY, h:mm:ss a'
                     )}
-                {/* {moment(currentEventApi?.eventAt).format(
-                  'MMMM Do YYYY, h:mm:ss a'
-                )} */}
               </p>
-              {/* You can add more event details here */}
             </>
           ) : (
             <div>
